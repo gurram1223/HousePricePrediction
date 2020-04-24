@@ -83,8 +83,7 @@ $(document).ready(function() {
     "BsmtQual":parseFloat($("#BsmtQual").val()),
     "2ndFlrSF":parseFloat(ndFlrSF)
     }
-    
-     $("#submit").attr("disabled", true);  
+      
      $.ajax({
      url: "/predict",
      data: fields,
