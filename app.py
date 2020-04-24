@@ -2,11 +2,12 @@ import numpy as np
 from flask import Flask, request, jsonify, render_template
 import json
 import pickle
+import requests
 
 app = Flask(__name__)
 model = pickle.load(open('xgb_model.pkl', 'rb'))
 
-
+requests.get('https://housepriceprediction-ml.herokuapp.com/', timeout=30)
 
 @app.route('/')
 def home():
