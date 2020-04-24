@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  
+<style>
+
+h2 {text-align: center;}
+p{text-align: center;}
+
+.customcontainer{
+display:flex;
+flex-wrap:wrap;
+align-items:center;
+justify-content:center;
+vertical-align:middle;
+}
+label{
+font-size:14px;
+font-weight:normal;
+}
+select{
+font-size:14px;
+border-radius:5px;
+border:1px solid rgba(0,0,0,0.14);
+}
+input{
+font-size:14px;
+border-radius:5px;
+border:1px solid rgba(0,0,0,0.14);
+}
+.row{
+margin-top:1%;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+</style>
+<script>
+
+$(document).ready(function() { 
+
+    $("#submit").click(function() { 
+       TotalBsmtSF =  $("#TotalBsmtSF").val().trim().length >0?  $("#TotalBsmtSF").val():0 ;
+       stFlrSF =  $("#1stFlrSF").val().trim().length >0? Math.log($("#1stFlrSF").val()):0 ;
+       ndFlrSF =  $("#2ndFlrSF").val().trim().length >0?  $("#2ndFlrSF").val():0 ;
+
+       var total_sf = parseFloat(TotalBsmtSF)+parseFloat(stFlrSF)+parseFloat(ndFlrSF) +0.0001
+       
+       lotarea = $("#LotArea").val().trim().length >0?  Math.log(parseFloat($("#LotArea").val())):parseFloat(0)
+       glivearea = $("#GrLivArea").val().trim().length >0?  Math.log(parseFloat($("#GrLivArea").val())):parseFloat(0)
+       
+       if($("#YearRemodAdd").val() < $("#Yearbuilt").val()){
+           alert("Renovated year should be greater than year-built");
+           $("#YearRemodAdd").val()
+       }
+        
+    var fields = {
+    "TotalSF":total_sf,
+    "TotalBsmtSF":parseFloat(TotalBsmtSF),
+    "OverallQual":parseFloat($("#OverallQual").val()),
+    "GarageCars":$("#GarageCars").val().trim().length >0?  parseFloat($("#GarageCars").val()):parseFloat(0),
+    "BsmtFinSF1":$("#BsmtFinSF1").val().trim().length >0?  parseFloat($("#BsmtFinSF1").val()):parseFloat(0),
+    "1stFlrSF":parseFloat(stFlrSF),
+    "YearRemodAdd":$("#YearRemodAdd").val().trim().length >0?  parseFloat($("#YearRemodAdd").val()):parseFloat(0),
+    "LotArea":lotarea,
+    "KitchenQual":parseFloat($("#KitchenQual").val()),
+    "GrLivArea":glivearea,
+    "GarageFinish":parseFloat($("#GarageFinish").val()),
+    "GarageArea":$("#GarageArea").val().trim().length >0?  parseFloat($("#GarageArea").val()):parseFloat(0),
+    "FullBath":$("#FullBath").val().trim().length >0?  parseFloat($("#FullBath").val()):parseFloat(0),
+    "ExterQual":parseFloat($("#ExterQual").val()),
+    "BsmtQual":parseFloat($("#BsmtQual").val()),
+    "2ndFlrSF":parseFloat(ndFlrSF)
+    }
+    
+     $("#submit").attr("disabled", true);  
+     $.ajax({
+     url: "/predict",
+     data: fields,
+     data: JSON.stringify(fields),
+     contentType: "application/json",
+     type:"POST",
+     success:function(res){
+   
+     $('#Output').text("House Price is : $"+res);
+     },
+     error:function(exception){
+     console.log(exception)
+     }
+     	
+     
+     });
+        
+       
+  }); 
+});
+
+</script>
+</head>
+<body>
+<div class="row"></div><div class="row"></div><div class="row"></div>
+<h2>House Price Prediction</h2>
+
+<br/>
+<div class="customcontainer">
+
+<form action="/action_page.php" id="form1">
+
+ <div class="row">
+  <label class="col-3" for="TotalBsmtSF">Basement Area</label>
+  <input class="col-2" type="number" step="0.0001" id="TotalBsmtSF" name="TotalBsmtSF" placeholder="square feet">
+  <p class="col-1"></p>
+  <label class="col-3" for="BsmtFinSF1">Basement Finished</label>
+	<select class="col-2" id="BsmtFinSF1">
+	<option value="0">Select</option>
+    <option value="6">Good Living Quarters</option>
+    <option value="5">Average Living Quarters</option>
+    <option value="4">Below Average Living Quarters</option>
+    <option value="3">Average Rec Room</option>
+    <option value="2">Low Quality</option>
+    <option value="1">Unfinshed</option>
+    <option value="0">No Basement</option>
+    </select>
+   </div> 
+  
+ <div class="row">
+  <label class="col-3" for="1stFlrSF">First Floor Area </label>
+  <input class="col-2" type="number" step="0.0001" id="1stFlrSF" name="1stFlrSF" placeholder="square feet" required>
+  <p class="col-1"></p>
+   <label class="col-3" for="2ndFlrSF">Second floor Area</label>
+  <input class="col-2" type="number" step="0.0001"  id="2ndFlrSF" name="2ndFlrSF" placeholder="square feet">
+   </div> 
+   
+ <div class="row">
+  <label class="col-3" for="LotArea">Lot Area</label>
+  <input class="col-2" type="number" step="0.0001" id="LotArea" name="LotArea" placeholder="square feet">
+  <p class="col-1"></p>
+  <label class="col-3" for="GrLivArea">Ground living area</label>
+  <input class="col-2" type="number" step="0.0001" id="GrLivArea" name="GrLivArea" placeholder="square feet">
+ </div> 
+ 
+ <div class="row">
+  <label class="col-3" for="GarageArea">Garage Area</label>
+  <input class="col-2" type="number" step="0.0001" id="GarageArea" name="GarageArea" placeholder="square feet">
+  <p class="col-1"></p>
+  <label class="col-3" for="GarageCars">Car Capacity</label>
+  <input class="col-2" type="number"  id="GarageCars" name="GarageCars">
+ </div> 
+ 
+<div class="row">
+  <label class="col-3" for="Year-built">Year Built</label>
+  <input class="col-2" type="number" min="1900" max="2099" step="1" id="Yearbuilt" placeholder="YYYY">
+  <p class="col-1"></p>
+  <label class="col-3" for="YearRemodAdd">Renovated Year </label>
+  <input class="col-2" type="number" min="1900" max="2020" step="1" id="YearRemodAdd" name="YearRemodAdd" placeholder="YYYY">
+</div>
+ 
+<div class="row">
+   <label class="col-3" for="FullBath">Full Bathrooms</label>
+  <input class="col-2" type="number" min="1" max="10" step="1" id="FullBath" name="FullBath">
+  <p class="col-1"></p>
+  <label class="col-3" for="BsmtQual">Basement Height </label>
+	<select class="col-2" id="BsmtQual">
+	<option value="0">Select</option>
+    <option value="5">Excellent (100+ inches)	</option>
+    <option value="4">Good (90-99 inches)</option>
+    <option value="3">Average (80-89 inches)</option>
+    <option value="2">Fair (70-79 inches)</option>
+    <option value="1">Poor (<70 inches)</option>
+    <option value="0">No Basement</option>
+    </select>
+</div>
+  
+<div class="row">
+  <label class="col-3" for="OverallQual">House Quality</label>
+    <select class="col-2" id="OverallQual">
+    <option value="0">Select</option>
+    <option value="10">Very Excellent</option>
+    <option value="9">Excellent</option>
+    <option value="8">Very Good</option>
+    <option value="7">Good</option>
+    <option value="6">Above Average</option>
+    <option value="5">Average</option>
+    <option value="4">Below Average</option>
+    <option value="3">Fair</option>
+    <option value="2">Poor</option>
+    <option value="1">Very Poor</option>
+    </select>
+  <p class="col-1"></p>
+  <label class="col-3" for="KitchenQual"> Kitchen quality</label>
+	<select class="col-2" id="KitchenQual">
+	<option value="0">Select</option>
+    <option value="5">Excellent</option>
+    <option value="4">Good</option>
+    <option value="3">Typical/Average</option>
+    <option value="2">Fair</option>
+    <option value="1">Poor</option>
+</select>
+ </div> 
+ 
+<div class="row">
+  <label class="col-3" for="GarageFinish"> Garage Interior</label>
+	<select class="col-2" id="GarageFinish">
+	<option value="0">Select</option>
+    <option value="3">Finished</option>
+    <option value="2">Rough Finished</option>
+    <option value="1">Unfinished</option>
+    <option value="0">No Garage</option>
+    </select>   
+  <p class="col-1"></p>
+  <label class="col-3" for="ExterQual"> Exterior Quality</label>
+	<select class="col-2" id="ExterQual">
+	<option value="0">Select</option>
+    <option value="5">Excellent</option>
+    <option value="4">Good</option>
+    <option value="3">Average</option>
+    <option value="2">Fair</option>
+    <option value="1">Poor</option>
+</select> 
+ </div> 
+<br/>
+<div class="row">
+<div class="col-5"></div>
+  <div class="col-2" > <input type="button" value="Submit" style="color:white;background-color:blue" id="submit"></div>
+  </div>
+  
+  <br/><br/>
+ <b><p id="Output"></p></b>
+</form> 
+</div>
+
+</body>
+</html>
