@@ -7,7 +7,6 @@ import pickle
 app = Flask(__name__)
 model = pickle.load(open('xgb_model.pkl', 'rb'))
 
-request.get('https://housepriceprediction-ml.herokuapp.com/', timeout=30)
 
 @app.route('/')
 def home():
@@ -43,5 +42,7 @@ def predict_api():
     return str(output)
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True)
+    
+#, use_reloader=False
 
