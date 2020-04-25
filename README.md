@@ -10,7 +10,21 @@ Dataset - https://www.kaggle.com/c/house-prices-advanced-regression-techniques
 
 ## Technologies
 
-Python, Machine Learning (Regression Techniques), Flask, Heroku(PaaS) for Deployment, HTML, CSS, Jquery, Ajax
+Python
+
+Machine Learning (Regression Techniques)
+
+Flask
+
+Heroku(PaaS) for Deployment
+
+HTML
+
+CSS
+
+Jquery
+
+Ajax
 
 ## Steps Followed
 
