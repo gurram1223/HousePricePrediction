@@ -6,7 +6,7 @@ With 79 explanatory variables describing (almost) every aspect of residential ho
 
 The Ames Housing dataset was compiled by Dean De Cock for use in data science education.
 
-DataSet - https://www.kaggle.com/c/house-prices-advanced-regression-techniques
+Dataset - https://www.kaggle.com/c/house-prices-advanced-regression-techniques
 
 ## Technologies
 
